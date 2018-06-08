@@ -81,7 +81,7 @@ class Wkhtmltopdf(object):
 
 
     @_maybe_decorate(use_celery, celery.task())
-    def render_template_to_pdf(self, template_name_or_list, save=False, download=False, **context):
+    def render_template_to_pdf(self, template_name_or_list, options="", save=False, download=False, **context):
         '''Renders a template from the template folder with the given
         context and produces a pdf. As this can be resource intensive, the function
         can easily be decorated with celery.task() by setting the WKHTMLTOPDF_USE_CELERY to True.
@@ -89,6 +89,7 @@ class Wkhtmltopdf(object):
         :param template_name_or_list:    The name of the template to be
                                          rendered, or an iterable with template names.
                                          The first one existing will be rendered.
+        :param options:    Command-line options to provide to wkhtmltopdf
         :param save:    Specifies whether to save the temporary pdf generated. Defaults to False.
         :param download:    Specifies if the pdf should be displayed in the browser
                             or downloaded as an attachment. Defaults to False (in browser).
@@ -105,8 +106,8 @@ class Wkhtmltopdf(object):
 
 
         #render appropriate template and write to a temp file
-        rendered = render_template(template_name_or_list, **context).encode('utf-8')
-        with tempfile.NamedTemporaryFile(suffix='.html', dir=os.path.dirname(__file__), delete=False, mode='w') as temp_html:
+        rendered = render_template(template_name_or_list, **context)
+        with tempfile.NamedTemporaryFile(suffix='.html', dir=self.pdf_dir_path, delete=False, mode='w') as temp_html:
             temp_html.write(rendered)
 
         #Checks to see if the pdf directory exists and generates a random pdf name
