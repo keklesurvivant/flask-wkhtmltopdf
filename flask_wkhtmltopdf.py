@@ -119,7 +119,7 @@ class Wkhtmltopdf(object):
             pass
 
         #Run wkhtmltopdf via the appropriate subprocess call
-        wkhtmltopdfargs = "wkhtmltopdf" + " " + temp_html.name + " " + temp_pdf.name
+        wkhtmltopdfargs = "wkhtmltopdf" + " " + options + " " + temp_html.name + " " + temp_pdf.name
 
         #A work around for python 2.6
         try:
